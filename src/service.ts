@@ -1,7 +1,5 @@
 import { ErrorHandler } from "./errorHandler/errorHandler";
 import { iEmployee } from "./interface/iEmployee";
-import { iHandler } from "./interface/iHandler";
-import { iService } from "./interface/iService";
 import { Logger } from "./logger/logger";
 
 export class service {

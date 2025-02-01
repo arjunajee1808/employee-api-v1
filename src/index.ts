@@ -20,7 +20,7 @@ app.listen(8080, () => {
   });
 });
 
-app.get("/get-employee", (req: any, res: any) => {
+app.get("/get-employee", (_req: any, res: any) => {
   log.Entry();
   handlerInstance.getEmployee();
   const response = handlerInstance.toHandlerResponse();
