@@ -10,7 +10,7 @@ app.use(express.json());
 app.use(cors());
 const log = new Logger();
 const errorHandler = new ErrorHandler();
-const serviceInstance = new service();
+const serviceInstance = new service({ log, errorHandler });
 const handlerInstance = new handler({ serviceInstance, log, errorHandler });
 
 app.listen(8080, () => {
