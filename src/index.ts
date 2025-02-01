@@ -27,7 +27,7 @@ app.get("/get-employee", (req: any, res: any) => {
   writeHandler(res, response.status, response);
   log.Exited();
 });
-
+// Adding a comment for commit testing.
 const writeHandler = (res: any, code: number, data: any) => {
   res.status(code).send(data);
 };
