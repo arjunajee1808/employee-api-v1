@@ -1,0 +1,32 @@
+{
+  "name": "employee-api-v1",
+  "version": "1.0.0",
+  "description": "To add, delete, update and get the employee details.",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "nodemon ./dist/src/index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/arjunajee1808/employee-api-v1.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/arjunajee1808/employee-api-v1/issues"
+  },
+  "homepage": "https://github.com/arjunajee1808/employee-api-v1#readme",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2",
+    "ts-node": "^10.9.2"
+  },
+  "devDependencies": {
+    "@types/cors": "^2.8.17",
+    "@types/express": "^5.0.0",
+    "nodemon": "^3.1.9"
+  }
+}
