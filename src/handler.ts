@@ -1,15 +1,12 @@
 import { ErrorHandler, httpcode, iError } from "./errorHandler/errorHandler";
-import { iEmployee } from "./interface/iEmployee";
 import { iHandler, iHandlerResponse } from "./interface/iHandler";
-import { iService } from "./interface/iService";
 import { Logger } from "./logger/logger";
-import { service } from "./service";
 
 export class handler {
   private service: any;
   private logger: Logger;
   private errorHandler: ErrorHandler;
-  private statusCode: number = 200;
+  private statusCode: number = httpcode.STS_OK;
   private data: any;
   constructor({ serviceInstance, log, errorHandler }: iHandler) {
     this.service = serviceInstance;

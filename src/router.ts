@@ -27,6 +27,6 @@ router.put("/employee/:id", (req: express.Request, res: express.Response) => {
     message: "request-id",
     details: req.params["id"],
   });
-  writeHandler(res, httpcode.STS_OK, req.params["employee-id"]);
+  writeHandler(res, httpcode.STS_NOCONTENT, req.params["employee-id"]);
   log.Exit();
 });

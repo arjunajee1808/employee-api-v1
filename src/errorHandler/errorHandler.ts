@@ -26,4 +26,5 @@ export enum httpcode {
   STS_OK = 200,
   STS_INT_SRV_ERR = 500,
   STS_CREATED = 201,
+  STS_NOCONTENT = 204,
 }
