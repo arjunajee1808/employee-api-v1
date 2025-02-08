@@ -1,3 +1,4 @@
+import { Employees } from "./constant";
 import { ErrorHandler } from "./errorHandler/errorHandler";
 import { iEmployee } from "./interface/iEmployee";
 import { Logger } from "./logger/logger";
@@ -11,18 +12,7 @@ export class service {
   }
   public getEmployee(): iEmployee[] | any {
     try {
-      return [
-        {
-          name: "John Doe",
-          email: "johndoe@abc.com",
-          phoneNumber: "1234567890",
-        },
-        {
-          name: "ABD DHF",
-          email: "ABDDHF@erj.com",
-          phoneNumber: "1234567890",
-        },
-      ];
+      return Employees;
     } catch (e: any) {
       this.logger.LogCustomMessage({
         level: "error",

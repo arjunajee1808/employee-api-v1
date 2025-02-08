@@ -1,17 +1,35 @@
 export class Logger {
-  private log({ level, message }: iLogger) {
+  private correlationId: string;
+
+  constructor(correalationId: string) {
+    this.correlationId = correalationId;
+  }
+
+  private log({ level, message, details = "" }: iLogger) {
+    let toLog: any = {
+      level,
+      message,
+      flowId: this.correlationId,
+      timeStamp: new Date().toISOString(),
+    };
+    if (details) {
+      toLog = {
+        ...toLog,
+        details,
+      };
+    }
     switch (level) {
       case "info":
-        console.info({ level, message, timeStamp: new Date().toISOString() });
+        console.info(toLog);
         return;
       case "debug":
-        console.debug({ level, message, timeStamp: new Date().toISOString() });
+        console.debug(toLog);
         return;
       case "error":
-        console.error({ level, message, timeStamp: new Date().toISOString() });
+        console.error(toLog);
         return;
       default:
-        console.log({ level, message, timeStamp: new Date().toISOString() });
+        console.log(toLog);
         return;
     }
   }
@@ -25,11 +43,11 @@ export class Logger {
       message: "Operation Executed Successfully",
     });
   }
-  public LogCustomMessage({ level, message }: iLogger) {
-    this.log({ level, message });
+  public LogCustomMessage({ level, message, details }: iLogger) {
+    this.log({ level, message, details });
   }
 
-  public Exited() {
+  public Exit() {
     this.log({ level: "info", message: "Exited" });
   }
 }
@@ -37,4 +55,5 @@ export class Logger {
 interface iLogger {
   level: string;
   message: string;
+  details?: any;
 }
