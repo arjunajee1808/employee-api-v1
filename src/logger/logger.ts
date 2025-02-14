@@ -19,13 +19,13 @@ export class Logger {
       };
     }
     switch (level) {
-      case "info":
+      case LogLevel.INFO:
         console.info(toLog);
         return;
-      case "debug":
+      case LogLevel.DEBUG:
         console.debug(toLog);
         return;
-      case "error":
+      case LogLevel.ERROR:
         console.error(toLog);
         return;
       default:
@@ -34,12 +34,12 @@ export class Logger {
     }
   }
   public Entry() {
-    this.log({ level: "info", message: "Entered" });
+    this.log({ level: LogLevel.INFO, message: "Entered" });
   }
 
   public LogOperationSuccess() {
     this.log({
-      level: "info",
+      level: LogLevel.INFO,
       message: "Operation Executed Successfully",
     });
   }
@@ -48,7 +48,7 @@ export class Logger {
   }
 
   public Exit() {
-    this.log({ level: "info", message: "Exited" });
+    this.log({ level: LogLevel.INFO, message: "Exited" });
   }
 }
 
@@ -56,4 +56,10 @@ interface iLogger {
   level: string;
   message: string;
   details?: any;
+}
+
+export enum LogLevel {
+  INFO = "info",
+  DEBUG = "debug",
+  ERROR = "error",
 }

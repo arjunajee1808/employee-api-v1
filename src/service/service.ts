@@ -1,7 +1,7 @@
-import { Employees } from "./constant";
-import { ErrorHandler } from "./errorHandler/errorHandler";
-import { iEmployee } from "./interface/iEmployee";
-import { Logger } from "./logger/logger";
+import { Employees } from "../constant";
+import { ErrorHandler } from "../errorHandler/errorHandler";
+import { iEmployee } from "../interface/iEmployee";
+import { Logger } from "../logger/logger";
 
 export class service {
   private logger: Logger;
@@ -16,7 +16,7 @@ export class service {
     } catch (e: any) {
       this.logger.LogCustomMessage({
         level: "error",
-        message: e.message || "Unecpected Error",
+        message: e.message || "Unexpected Error",
       });
       throw new Error(e);
     }

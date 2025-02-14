@@ -1,6 +1,6 @@
-import { ErrorHandler, httpcode, iError } from "./errorHandler/errorHandler";
-import { iHandler, iHandlerResponse } from "./interface/iHandler";
-import { Logger } from "./logger/logger";
+import { ErrorHandler, httpcode } from "../errorHandler/errorHandler";
+import { iHandler, iHandlerResponse } from "../interface/iHandler";
+import { Logger } from "../logger/logger";
 
 export class handler {
   private service: any;

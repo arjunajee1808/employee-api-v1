@@ -1,10 +1,10 @@
 import express from "express";
-import { handler } from "./handler";
-import { Logger } from "./logger/logger";
-import { service } from "./service";
-import { ErrorHandler, httpcode } from "./errorHandler/errorHandler";
-import { writeHandler } from "./utils/util";
-import { Cache } from "./cache";
+import { handler } from "../handler/handler";
+import { LogLevel } from "../logger/logger";
+import { service } from "../service/service";
+import { httpcode } from "../errorHandler/errorHandler";
+import { writeHandler } from "../utils/utils";
+import { Cache } from "../cache";
 
 export const router = express.Router();
 
@@ -23,7 +23,7 @@ router.put("/employee/:id", (req: express.Request, res: express.Response) => {
   const { log } = new Cache().getCache();
   log.Entry();
   log.LogCustomMessage({
-    level: "info",
+    level: LogLevel.INFO,
     message: "request-id",
     details: req.params["id"],
   });

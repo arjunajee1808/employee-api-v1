@@ -1,4 +1,5 @@
 import express from "express";
+import { v4 } from "uuid";
 
 export const writeHandler = (
   res: express.Response,
@@ -9,5 +10,5 @@ export const writeHandler = (
 };
 
 export const getFlowId = (): string => {
-  return Math.random().toPrecision(12).toString().split(".")[1];
+  return v4();
 };

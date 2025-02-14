@@ -1,7 +1,6 @@
 import express from "express";
 import cors from "cors";
-import { Logger } from "./logger/logger";
-import { router } from "./router";
+import { router } from "./router/router";
 
 const app = express();
 app.use(express.json());

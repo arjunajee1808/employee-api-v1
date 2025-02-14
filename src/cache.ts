@@ -1,6 +1,6 @@
 import { ErrorHandler } from "./errorHandler/errorHandler";
 import { Logger } from "./logger/logger";
-import { getFlowId } from "./utils/util";
+import { getFlowId } from "./utils/index";
 
 export class Cache {
   private log!: Logger;
@@ -14,6 +14,7 @@ export class Cache {
   }
 
   public getCache(): { log: Logger; errorHandler: ErrorHandler } {
+    // If fresh, create the instances for logger, errorhandler.
     if (this.isFresh) {
       this.setInstance();
     }
