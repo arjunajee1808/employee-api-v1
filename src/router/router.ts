@@ -13,20 +13,42 @@ router.get("/employees", (_req: express.Request, res: express.Response) => {
   const serviceInstance = new service({ log, errorHandler });
   const handlerInstance = new handler({ serviceInstance, log, errorHandler });
   log.Entry();
-  handlerInstance.getEmployee();
+  handlerInstance.getEmployees();
   const response = handlerInstance.toHandlerResponse();
   writeHandler(res, response.status, response);
   log.Exit();
 });
 
-router.put("/employee/:id", (req: express.Request, res: express.Response) => {
-  const { log } = new Cache().getCache();
+router.get("/employee/:id", (req: express.Request, res: express.Response) => {
+  const { log, errorHandler } = new Cache().getCache();
+  const serviceInstance = new service({ log, errorHandler });
+  const handlerInstance = new handler({ serviceInstance, log, errorHandler });
   log.Entry();
+  const id = req.params?.["id"] || "";
   log.LogCustomMessage({
     level: LogLevel.INFO,
     message: "request-id",
-    details: req.params["id"],
+    details: id,
   });
-  writeHandler(res, httpcode.STS_NOCONTENT, req.params["employee-id"]);
+  handlerInstance.getEmployee(id);
+  const response = handlerInstance.toHandlerResponse();
+  writeHandler(res, response.status, response);
+  log.Exit();
+});
+
+router.post("/add-employee", (req: express.Request, res: express.Response) => {
+  const { log, errorHandler } = new Cache().getCache();
+  const serviceInstance = new service({ log, errorHandler });
+  const handlerInstance = new handler({ serviceInstance, log, errorHandler });
+  log.Entry();
+  const employee = req.body || {};
+  log.LogCustomMessage({
+    level: LogLevel.INFO,
+    message: "request-id",
+    details: employee,
+  });
+  handlerInstance.addEmployee(employee);
+  const response = handlerInstance.toHandlerResponse();
+  writeHandler(res, response.status, response);
   log.Exit();
 });

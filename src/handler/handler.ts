@@ -1,4 +1,5 @@
-import { ErrorHandler, httpcode } from "../errorHandler/errorHandler";
+import { ErrorHandler, httpcode, iError } from "../errorHandler/errorHandler";
+import { iEmployee } from "../interface/iEmployee";
 import { iHandler, iHandlerResponse } from "../interface/iHandler";
 import { Logger } from "../logger/logger";
 
@@ -15,23 +16,99 @@ export class handler {
   }
 
   /* This function return the list employees */
-  public getEmployee() {
+  public getEmployees() {
     try {
       this.logger.LogCustomMessage({
         level: "info",
         message: "Fetching Employee details",
       });
-      const data = this.service.getEmployee();
-      this.logger.LogOperationSuccess();
+      const data = this.service.getEmployees();
       this.data = data;
-    } catch (e: any) {
+      this.logger.LogCustomMessage({
+        level: "debug",
+        message: "Response to be sent: ",
+        details: this.data,
+      });
+      this.logger.LogOperationSuccess();
+    } catch (error: any) {
       this.logger.LogCustomMessage({
         level: "error",
-        message: e.message || e,
+        message: error.message || error,
       });
 
-      this.statusCode = httpcode.STS_INT_SRV_ERR;
-      this.data = this.errorHandler.InterServerError(e || "Unexpected Error");
+      if (error.statusCode) {
+        this.statusCode = error.statusCode;
+        this.data = error;
+      } else {
+        this.statusCode = httpcode.STS_INT_SRV_ERR;
+        this.data = this.errorHandler.InterServerError(
+          error || "Unexpected Error"
+        );
+      }
+    }
+  }
+
+  public getEmployee(id: any) {
+    try {
+      this.logger.LogCustomMessage({
+        level: "info",
+        message: "Fetching Employee detail",
+      });
+      const data = this.service.getEmployee(id);
+      this.data = data;
+      this.logger.LogCustomMessage({
+        level: "debug",
+        message: "Response to be sent: ",
+        details: this.data,
+      });
+      this.logger.LogOperationSuccess();
+    } catch (error: any) {
+      this.logger.LogCustomMessage({
+        level: "Error Details: ",
+        message: error.message || error,
+      });
+
+      if (error.statusCode) {
+        this.statusCode = error.statusCode;
+        this.data = error;
+      } else {
+        this.statusCode = httpcode.STS_INT_SRV_ERR;
+        this.data = this.errorHandler.InterServerError(
+          error || "Unexpected Error"
+        );
+      }
+    }
+  }
+
+  public addEmployee(employee: iEmployee) {
+    try {
+      this.logger.LogCustomMessage({
+        level: "info",
+        message: "Adding Employee",
+      });
+      const data = this.service.addEmployee(employee);
+      this.data = data;
+      this.logger.LogCustomMessage({
+        level: "debug",
+        message: "Response to be sent: ",
+        details: this.data,
+      });
+      this.logger.LogOperationSuccess();
+    } catch (error: any) {
+      this.logger.LogCustomMessage({
+        level: "Error Details: ",
+        message: error.message || error,
+      });
+
+      if (error.statusCode) {
+        this.statusCode = error.statusCode;
+        this.data = error;
+      } else {
+        this.statusCode = httpcode.STS_INT_SRV_ERR;
+        this.data = this.errorHandler.InterServerError(
+          error || "Unexpected Error"
+        );
+      }
     }
   }
 
