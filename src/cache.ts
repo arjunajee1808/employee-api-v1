@@ -2,10 +2,23 @@ import { ErrorHandler } from "./errorHandler/errorHandler";
 import { Logger } from "./logger/logger";
 import { getFlowId } from "./utils/index";
 
+// Singleton Method to hold the instances
 export class Cache {
+  private static cacheInstance: Cache;
   private log!: Logger;
   private errorHandler!: ErrorHandler;
-  private isFresh = true;
+  private isFresh = false;
+
+  private constructor() {
+    this.isFresh = true;
+  }
+
+  public static getInstance() {
+    if (!this.cacheInstance) {
+      this.cacheInstance = new Cache();
+    }
+    return this.cacheInstance;
+  }
 
   private setInstance() {
     this.log = new Logger(getFlowId());

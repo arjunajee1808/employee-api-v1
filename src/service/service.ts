@@ -23,7 +23,9 @@ export class service {
   }
   public getEmployee(id: any): iEmployee | any {
     try {
-      const employee = Employees.filter((employee) => employee.id == id);
+      const employee: iEmployee[] = Employees.filter(
+        (employee) => employee.id == id
+      );
       if (!employee.length) {
         throw { statusCode: 404, message: "Emp:NOT_FOUND" };
       } else {
