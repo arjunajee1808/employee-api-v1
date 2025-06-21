@@ -1,40 +1,65 @@
 export class Logger {
-  private log({ level, message }: iLogger) {
+  private correlationId: string;
+
+  constructor(correalationId: string) {
+    this.correlationId = correalationId;
+  }
+
+  private log({ level, message, details = "" }: iLogger) {
+    let toLog: any = {
+      level,
+      message,
+      flowId: this.correlationId,
+      timeStamp: new Date().toISOString(),
+    };
+    if (details) {
+      toLog = {
+        ...toLog,
+        details,
+      };
+    }
     switch (level) {
-      case "info":
-        console.info({ level, message, timeStamp: new Date().toISOString() });
+      case LogLevel.INFO:
+        console.info(toLog);
         return;
-      case "debug":
-        console.debug({ level, message, timeStamp: new Date().toISOString() });
+      case LogLevel.DEBUG:
+        console.debug(toLog);
         return;
-      case "error":
-        console.error({ level, message, timeStamp: new Date().toISOString() });
+      case LogLevel.ERROR:
+        console.error(toLog);
         return;
       default:
-        console.log({ level, message, timeStamp: new Date().toISOString() });
+        console.log(toLog);
         return;
     }
   }
   public Entry() {
-    this.log({ level: "info", message: "Entered" });
+    this.log({ level: LogLevel.INFO, message: "Entered" });
   }
 
   public LogOperationSuccess() {
     this.log({
-      level: "info",
+      level: LogLevel.INFO,
       message: "Operation Executed Successfully",
     });
   }
-  public LogCustomMessage({ level, message }: iLogger) {
-    this.log({ level, message });
+  public LogCustomMessage({ level, message, details }: iLogger) {
+    this.log({ level, message, details });
   }
 
-  public Exited() {
-    this.log({ level: "info", message: "Exited" });
+  public Exit() {
+    this.log({ level: LogLevel.INFO, message: "Exited" });
   }
 }
 
 interface iLogger {
   level: string;
   message: string;
+  details?: any;
+}
+
+export enum LogLevel {
+  INFO = "info",
+  DEBUG = "debug",
+  ERROR = "error",
 }

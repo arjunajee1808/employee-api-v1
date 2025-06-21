@@ -6,10 +6,12 @@ export class ErrorHandler extends Error {
       details: details?.message || details || undefined,
     };
   }
-  public InterServerError(details?: Error): iError {
+  public InterServerError(details?: any): iError {
+    console.log(details.Error());
+
     return {
       statusCode: httpcode.STS_INT_SRV_ERR,
-      message: "Encountered Internal Server Error",
+      message: details.message || "Encountered Internal Server Error",
       details: details?.message || details || undefined,
     };
   }
@@ -26,4 +28,5 @@ export enum httpcode {
   STS_OK = 200,
   STS_INT_SRV_ERR = 500,
   STS_CREATED = 201,
+  STS_NOCONTENT = 204,
 }

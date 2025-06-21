@@ -1,5 +1,6 @@
 import { iEmployee } from "./iEmployee";
 
 export interface iService {
-  getEmployee(): iEmployee[];
+  getEmployees(): iEmployee[];
+  getEmployee(id: any): iEmployee;
 }
