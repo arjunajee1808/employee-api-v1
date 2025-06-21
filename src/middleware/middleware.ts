@@ -1,5 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
+import { ApiAllowedMethods } from "../utils";
+import { match } from "path-to-regexp";
 
 const refreshTokens: string[] = []; // In-memory store for refresh tokens (use a database in production)
 
@@ -50,9 +52,27 @@ export const authorizeJWT = (
 };
 
 // Invalid HTTP method middleware
-export const invalidMethodHandler = (req: Request, res: Response) => {
-  console.warn("Method Not Allowed:", req.method);
-  res.status(405).json({ message: "Method Not Allowed" });
+// Precompile matchers for performance
+const matchers = Object.entries(ApiAllowedMethods).map(([pattern, method]) => ({
+  matchFn: match(pattern, { decode: decodeURIComponent }),
+  method,
+}));
+
+export const MethodHandler = (
+  req: Request,
+  res: Response,
+  next: NextFunction
+): any => {
+  const matched = matchers.find(({ matchFn }) => matchFn(req.path));
+
+  if (!matched || !matched.method.includes(req.method)) {
+    console.warn("Method Not Allowed:", req.method, "for", req.path);
+    return res
+      .status(405)
+      .json({ message: "Method Not Allowed", allowedMethods: matched?.method });
+  }
+
+  next();
 };
 
 // Function to generate JWT and refresh token for claims sent in request

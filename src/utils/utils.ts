@@ -12,3 +12,16 @@ export const writeHandler = (
 export const getFlowId = (): string => {
   return v4();
 };
+
+export enum RequestMethods {
+  Get = "GET",
+  Post = "POST",
+  Put = "PUT",
+  Patch = "PATCH",
+  Options = "OPTIONS",
+}
+
+export const ApiAllowedMethods: Record<string, string[]> = {
+  "/employees": [RequestMethods.Get],
+  "/employee/:id": [RequestMethods.Get],
+};
