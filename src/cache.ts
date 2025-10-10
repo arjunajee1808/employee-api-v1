@@ -21,7 +21,7 @@ export class Cache {
   }
 
   private setInstance() {
-    this.log = new Logger(getFlowId());
+    this.log = new Logger();
     this.errorHandler = new ErrorHandler();
     this.isFresh = false;
   }

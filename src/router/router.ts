@@ -2,7 +2,7 @@ import express from "express";
 import { handler } from "../handler/handler";
 import { LogLevel } from "../logger/logger";
 import { service } from "../service/service";
-import { writeHandler } from "../utils/utils";
+import { getFlowId, writeHandler } from "../utils/utils";
 import { Cache } from "../cache";
 import { authorizeJWT, MethodHandler } from "../middleware/middleware";
 
@@ -11,9 +11,9 @@ router.use(authorizeJWT);
 router.use(MethodHandler);
 
 router.get("/employees", (_req: express.Request, res: express.Response) => {
-  console.log("Request :", _req);
   const cacheInstance = Cache.getInstance();
   const { log, errorHandler } = cacheInstance.getCache();
+  log.setCorrelationId(getFlowId());
   const serviceInstance = new service({ log, errorHandler });
   const handlerInstance = new handler({ serviceInstance, log, errorHandler });
   log.Entry();
@@ -26,6 +26,7 @@ router.get("/employees", (_req: express.Request, res: express.Response) => {
 router.get("/employee/:id", (req: express.Request, res: express.Response) => {
   const cacheInstance = Cache.getInstance();
   const { log, errorHandler } = cacheInstance.getCache();
+  log.setCorrelationId(getFlowId());
   const serviceInstance = new service({ log, errorHandler });
   const handlerInstance = new handler({ serviceInstance, log, errorHandler });
   log.Entry();
@@ -44,6 +45,7 @@ router.get("/employee/:id", (req: express.Request, res: express.Response) => {
 router.post("/add-employee", (req: express.Request, res: express.Response) => {
   const cacheInstance = Cache.getInstance();
   const { log, errorHandler } = cacheInstance.getCache();
+  log.setCorrelationId(getFlowId());
   const serviceInstance = new service({ log, errorHandler });
   const handlerInstance = new handler({ serviceInstance, log, errorHandler });
   log.Entry();
