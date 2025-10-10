@@ -1,8 +1,10 @@
 export class Logger {
-  private correlationId: string;
+  private correlationId: string | undefined;
 
-  constructor(correalationId: string) {
-    this.correlationId = correalationId;
+  constructor() {}
+
+  public setCorrelationId(correlationId: string) {
+    this.correlationId = correlationId;
   }
 
   private log({ level, message, details = "" }: iLogger) {
