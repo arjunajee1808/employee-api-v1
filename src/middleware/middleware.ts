@@ -4,6 +4,13 @@ import { ApiAllowedMethods } from "../utils";
 import { match } from "path-to-regexp";
 
 const refreshTokens: string[] = []; // In-memory store for refresh tokens (use a database in production)
+interface DecodedToken {
+  exp?: number;
+  iat?: number;
+  [key: string]: any;
+}
+
+type JWTPayload = DecodedToken | string | jwt.JwtPayload;
 
 // Error handling middleware
 export const errorHandler = (
@@ -38,11 +45,12 @@ export const authorizeJWT = (
   }
 
   try {
-    const decoded = jwt.verify(token, secretKey);
+    const decoded:JWTPayload = jwt.verify(token, secretKey);
     console.log("Token verified successfully:", decoded);
     if (decoded) next();
   } catch (ex) {
     if (ex instanceof Error) {
+      // Handles jwt expiresError and jsonWebTokenError
       console.error("Invalid token:", ex.message);
     } else {
       console.error("Invalid token:", ex);
@@ -80,6 +88,9 @@ export const generateTokens = (req: Request, res: Response) => {
   const claims = req.body;
   const secretKey = process.env.JWT_SECRET;
   const refreshSecretKey = process.env.JWT_REFRESH_SECRET;
+  const clientId = process.env.CLIENT_ID;
+  const clientSecret = process.env.CLIENT_SECRET;
+  const expiresInSeconds = process.env.JWT_EXPIRES_IN_SECONDS || "300"; // Default to 5 minutes
 
   if (!secretKey || !refreshSecretKey) {
     console.error("JWT secret or refresh secret is not defined.");
@@ -89,9 +100,27 @@ export const generateTokens = (req: Request, res: Response) => {
     });
     return;
   }
+  if (!clientId || !clientSecret) {
+    console.error("Client ID or Client Secret is not defined.");
+    res.status(500).json({
+      message:
+        "Internal Server Error. Client ID or Client Secret is not defined.",
+    });
+    return;
+  }
 
   try {
-    const token = jwt.sign(claims, secretKey, { expiresIn: "15m" });
+    if (
+      req.headers["client_id"] !== clientId ||
+      req.headers["client_secret"] !== clientSecret
+    ) {
+      console.warn("Unauthorized: Invalid client credentials.");
+      res
+        .status(401)
+        .json({ message: "Unauthorized: Invalid client credentials." });
+      return;
+    }
+    const token = jwt.sign(claims, secretKey, { expiresIn: +expiresInSeconds });
     const refreshToken = jwt.sign(claims, refreshSecretKey, {
       expiresIn: "7d",
     });
