@@ -1,6 +1,6 @@
-import { iEmployee } from "./iEmployee";
+import { IEmployee } from "../entity/Employee";
 
 export interface iService {
-  getEmployees(): iEmployee[];
-  getEmployee(id: any): iEmployee;
+  getEmployees(): Promise<IEmployee[]>;
+  getEmployee(id: any): Promise<IEmployee | null>;
 }

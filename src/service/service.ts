@@ -1,18 +1,20 @@
-import { Employees } from "../constant";
+import { EmployeeRepository } from "../repository/employeeRepository";
 import { ErrorHandler } from "../errorHandler/errorHandler";
-import { iEmployee } from "../interface/iEmployee";
+import { IEmployee } from "../entity/Employee";
 import { Logger } from "../logger/logger";
 
 export class service {
   private logger: Logger;
   private errorHandler: ErrorHandler;
-  constructor({ log, errorHandler }: any) {
-    this.logger = log;
-    this.errorHandler = errorHandler;
+  private employeeRepository: EmployeeRepository;
+  constructor() {
+    this.logger = new Logger();
+    this.errorHandler = new ErrorHandler();
+    this.employeeRepository = new EmployeeRepository();
   }
-  public getEmployees(): iEmployee[] | any {
+  public async getEmployees(): Promise<IEmployee[]> {
     try {
-      return Employees;
+      return await this.employeeRepository.findAll();
     } catch (e: any) {
       this.logger.LogCustomMessage({
         level: "error",
@@ -21,12 +23,10 @@ export class service {
       throw new Error(e);
     }
   }
-  public getEmployee(id: any): iEmployee | any {
+  public async getEmployee(id: number): Promise<IEmployee | null> {
     try {
-      const employee: iEmployee[] = Employees.filter(
-        (employee) => employee.id == id
-      );
-      if (!employee.length) {
+      const employee = await this.employeeRepository.findById(id);
+      if (!employee) {
         throw { statusCode: 404, message: "Emp:NOT_FOUND" };
       } else {
         return employee;
@@ -40,10 +40,58 @@ export class service {
     }
   }
 
-  public addEmployee(employee: iEmployee): string | any {
+  public async addEmployee(employee: IEmployee): Promise<IEmployee> {
     try {
-      Employees.push(employee);
-      return "Added";
+      if (employee.email) {
+        const existingEmployee = await this.employeeRepository.findByEmail(
+          employee.email
+        );
+        if (existingEmployee) {
+          throw { statusCode: 400, message: "Emp:ALREADY_EXISTS" };
+        }
+      }
+      return await this.employeeRepository.create(employee);
+    } catch (e: any) {
+      this.logger.LogCustomMessage({
+        level: "error",
+        message: e.message || "Unexpected Error",
+      });
+      throw e;
+    }
+  }
+
+  public async updateEmployee(id: number, employee: Partial<IEmployee>): Promise<IEmployee | null> {
+    try {
+      const existingEmployee = await this.employeeRepository.findById(id);
+      if (!existingEmployee) {
+        throw { statusCode: 404, message: "Emp:NOT_FOUND" };
+      }
+      
+      if (employee.email && employee.email !== existingEmployee.email) {
+        const emailExists = await this.employeeRepository.findByEmail(employee.email);
+        if (emailExists) {
+          throw { statusCode: 400, message: "Emp:EMAIL_ALREADY_EXISTS" };
+        }
+      }
+      
+      return await this.employeeRepository.update(id, employee);
+    } catch (e: any) {
+      this.logger.LogCustomMessage({
+        level: "error",
+        message: e.message || "Unexpected Error",
+      });
+      throw e;
+    }
+  }
+
+  public async deleteEmployee(id: number): Promise<boolean> {
+    try {
+      const existingEmployee = await this.employeeRepository.findById(id);
+      if (!existingEmployee) {
+        throw { statusCode: 404, message: "Emp:NOT_FOUND" };
+      }
+      
+      return await this.employeeRepository.delete(id);
     } catch (e: any) {
       this.logger.LogCustomMessage({
         level: "error",

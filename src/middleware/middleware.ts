@@ -2,6 +2,7 @@ import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
 import { ApiAllowedMethods } from "../utils";
 import { match } from "path-to-regexp";
+import { config } from "../config/index";
 
 const refreshTokens: string[] = []; // In-memory store for refresh tokens (use a database in production)
 interface DecodedToken {
@@ -30,7 +31,7 @@ export const authorizeJWT = (
   next: NextFunction
 ): void => {
   const token = req.header("Authorization")?.replace("Bearer ", "");
-  const secretKey = process.env.JWT_SECRET;
+  const secretKey = config.jwt.secret;
   if (!secretKey) {
     console.error("JWT secret is not defined.");
     res
@@ -86,11 +87,11 @@ export const MethodHandler = (
 // Function to generate JWT and refresh token for claims sent in request
 export const generateTokens = (req: Request, res: Response) => {
   const claims = req.body;
-  const secretKey = process.env.JWT_SECRET;
-  const refreshSecretKey = process.env.JWT_REFRESH_SECRET;
-  const clientId = process.env.CLIENT_ID;
-  const clientSecret = process.env.CLIENT_SECRET;
-  const expiresInSeconds = process.env.JWT_EXPIRES_IN_SECONDS || "300"; // Default to 5 minutes
+  const secretKey = config.jwt.secret;
+  const refreshSecretKey = config.jwt.refreshSecret;
+  const clientId = config.client.id;
+  const clientSecret = config.client.secret;
+  const expiresInSeconds = config.jwt.expiresIn; // Default to 5 minutes
 
   if (!secretKey || !refreshSecretKey) {
     console.error("JWT secret or refresh secret is not defined.");
@@ -140,8 +141,8 @@ export const generateTokens = (req: Request, res: Response) => {
 // Function to refresh JWT using refresh token
 export const refreshJWT = (req: Request, res: Response) => {
   const { refreshToken } = req.body;
-  const secretKey = process.env.JWT_SECRET;
-  const refreshSecretKey = process.env.JWT_REFRESH_SECRET;
+  const secretKey = config.jwt.secret;
+  const refreshSecretKey = config.jwt.refreshSecret;
 
   if (!refreshToken) {
     console.warn("No refresh token provided.");

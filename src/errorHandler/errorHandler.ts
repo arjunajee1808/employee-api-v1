@@ -7,11 +7,11 @@ export class ErrorHandler extends Error {
     };
   }
   public InterServerError(details?: any): iError {
-    console.log(details.Error());
+    console.log(details);
 
     return {
       statusCode: httpcode.STS_INT_SRV_ERR,
-      message: details.message || "Encountered Internal Server Error",
+      message: details?.message || "Encountered Internal Server Error",
       details: details?.message || details || undefined,
     };
   }

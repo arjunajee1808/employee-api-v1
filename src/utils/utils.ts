@@ -1,5 +1,5 @@
 import express from "express";
-import { v4 } from "uuid";
+import { randomUUID } from "crypto";
 
 export const writeHandler = (
   res: express.Response,
@@ -10,7 +10,7 @@ export const writeHandler = (
 };
 
 export const getFlowId = (): string => {
-  return v4();
+  return randomUUID();
 };
 
 export enum RequestMethods {
@@ -18,10 +18,12 @@ export enum RequestMethods {
   Post = "POST",
   Put = "PUT",
   Patch = "PATCH",
+  Delete = "DELETE",
   Options = "OPTIONS",
 }
 
 export const ApiAllowedMethods: Record<string, string[]> = {
   "/employees": [RequestMethods.Get],
-  "/employee/:id": [RequestMethods.Get],
+  "/employee/:id": [RequestMethods.Get, RequestMethods.Put, RequestMethods.Delete],
+  "/add-employee": [RequestMethods.Post],
 };

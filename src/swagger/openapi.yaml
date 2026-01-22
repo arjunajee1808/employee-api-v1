@@ -1,0 +1,162 @@
+openapi: 3.0.3
+info:
+  title: Employee API
+  description: API for managing employee details
+  version: 1.0.0
+  contact:
+    name: Arjun Dinesh
+    email: arjun@example.com
+servers:
+  - url: http://localhost:8080/api
+    description: Development server
+
+paths:
+  /employees:
+    get:
+      summary: Get all employees
+      description: Retrieve a list of all employees
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Employee"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /employee/{id}:
+    get:
+      summary: Get employee by ID
+      description: Retrieve a specific employee by their ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+          description: Employee ID
+      responses:
+        "200":
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+        "404":
+          description: Employee not found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+  /add-employee:
+    post:
+      summary: Add new employee
+      description: Create a new employee record
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/NewEmployee"
+      responses:
+        "201":
+          description: Employee created successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Employee"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+
+components:
+  schemas:
+    Employee:
+      type: object
+      properties:
+        id:
+          type: integer
+          description: Employee unique identifier
+          example: 1
+        name:
+          type: string
+          description: Employee full name
+          example: John Doe
+        email:
+          type: string
+          format: email
+          description: Employee email address
+          example: john.doe@example.com
+        phoneNumber:
+          type: string
+          description: Employee phone number
+          example: "1234567890"
+        createdAt:
+          type: string
+          format: date-time
+          description: Record creation timestamp
+        updatedAt:
+          type: string
+          format: date-time
+          description: Last update timestamp
+      required:
+        - id
+        - name
+        - email
+        - phoneNumber
+
+    NewEmployee:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Employee full name
+          example: John Doe
+        email:
+          type: string
+          format: email
+          description: Employee email address
+          example: john.doe@example.com
+        phoneNumber:
+          type: string
+          description: Employee phone number
+          example: "1234567890"
+      required:
+        - name
+        - email
+        - phoneNumber
+
+    Error:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Error message
+          example: An error occurred
+        statusCode:
+          type: integer
+          description: HTTP status code
+          example: 500
